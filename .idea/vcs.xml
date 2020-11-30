@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="VcsDirectoryMappings">
+    <mapping directory="$PROJECT_DIR$/file-cloud-server" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/gateway-server" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/pay-server" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/sanger-tools" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/tools" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/users-ervice" vcs="Git" />
+  </component>
+</project>

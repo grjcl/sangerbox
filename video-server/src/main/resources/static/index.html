@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+</head>
+<body>
+	<script src="js/hls.js"></script>
+	<script src="https://cdn.bootcss.com/crypto-js/3.1.9-1/crypto-js.min.js"></script>
+	<div><video id="video" width="500px" height="500px" controls></video></div>
+	<script>
+	
+		var video = document.getElementById('video');
+		if (Hls.isSupported()) {
+			var hls = new Hls();
+			hls.loadSource('http://cloud.sangerbox.com/video/getVideo?id=584da8aed88f406f987f2d26f1c13b2b');
+			hls.attachMedia(video);
+			hls.on(Hls.Events.MANIFEST_PARSED, function() {
+				//video.play();
+			});
+		}
+	</script>
+</body>
+</html>
