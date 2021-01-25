@@ -41,12 +41,14 @@ public class SearchVideo {
             return key.toString();
         }
         var responseJson = new JSONObject();
+//        金额排序
         if (money != null && money.split("-").length > 1 && Util.isNumeric(money.split("-")[0]) && Util.isNumeric(money.split("-")[1])) {
             money = "`money`>=" + money.split("-")[0] + " AND money<=" + money.split("-")[1];
         } else {
             money = null;
         }
         var type = types.size() == 0 ? null : "'" + String.join("','", types) + "'";
+//更新时间排序
         if (sort != null && !sort.isBlank() && sort.split("_").length > 1) {
             var sortName = sort.split("_")[0];
             var sortOrder = Integer.valueOf(sort.split("_")[1]);
@@ -58,8 +60,10 @@ public class SearchVideo {
         } else {
             sort = " ORDER BY `video_total`.`create_time` DESC";
         }
+//        查找
         var videoList = Util.util.videoMapper.searchVideo(money, type, sort);
         for (VideoTotal videoTotal : videoList){
+//            查询出折扣
             BigDecimal decimal = Util.util.videoMapper.searchDis(videoTotal.getId());
             videoTotal.setDiscount(decimal);
         }

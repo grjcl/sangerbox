@@ -21,7 +21,7 @@ import java.util.ArrayList;
 public class Upload {
 
 
-    public String upUserVideo(MultipartFile file, HttpServletRequest request) throws Exception {
+    /*public String upUserVideo(MultipartFile file, HttpServletRequest request) throws Exception {
         if (file == null) {
             throw new Exception("没有文件!");
         } else if (!"video/mp4".equals(file.getContentType())) {
@@ -54,7 +54,7 @@ public class Upload {
         ffmpegCmd.append(" -hls_segment_filename " + Util.VIDEO_SAVE_PATH + uuid + "/" + uuid + "%5d");
         ffmpegCmd.append(" " + Util.VIDEO_SAVE_PATH + uuid + "/" + uuid + ".m3u8");
         return ffmpegCmd.toString();
-    }
+    }*/
     /**
      * 上传文件
      *
@@ -76,18 +76,24 @@ public class Upload {
             if (!videoFile.exists()) {
                 videoFile.mkdirs();
             }
+
+        //使用transferTo（dest）方法将上传文件写到服务器上指定的文件。
             file.transferTo(new File(videoFile + "/" + uuid + ".mp4"));
+//           生成一个uuid写入文件enc.key
             var status = Util.writerText(videoFile + "/" + Util.VIDEO_KEY_NAME, Util.getUUID());
             if (!status) {
                 throw new Exception("上传失败!");
             }
+//            生成Api
             var keyinfo = new StringBuffer(Util.PROJECT_SITE + "getVideoKey?id=" + uuid + "\n");
             keyinfo.append(Util.VIDEO_SAVE_PATH + uuid + "/" + Util.VIDEO_KEY_NAME + "\n");
             keyinfo.append(Util.getUUID());
+//            写入文件enc.keyinfo
             status = Util.writerText(videoFile + "/" + Util.VIDEO_KEY_NAME + "info", keyinfo.toString());
             if (!status) {
                 throw new Exception("上传失败!");
             }
+
             var ffmpegCmd = new StringBuilder("ffmpeg -y -i");
             ffmpegCmd.append(" " + videoFile + "/" + uuid + ".mp4");
             ffmpegCmd.append(" -hls_time 10");
@@ -112,6 +118,7 @@ public class Upload {
     @Transactional(rollbackFor = Exception.class)
     public String submitUserVideos(String id, MultipartFile imageFile,MultipartFile zipFile, @Validated VideoTotal videoTotal, HttpServletRequest request) throws Exception {
         var userPhone = request.getHeader("userPhone");
+        System.out.println("视频合集列表"+id);
         String[] split = id.split(",");
         if (!Util.isPhone(userPhone) || split.length == 0) {
             throw new Exception("提交失败!");
@@ -123,10 +130,11 @@ public class Upload {
         var videoTotalUUID = Util.getUUID();
         videoTotal.setId(videoTotalUUID);
         videoTotal.setUserId(request.getHeader("userId"));
-        videoTotal.setImage(new Base64().encodeToString(imageFile.getBytes()));
+        videoTotal.setImage("data:image/png;base64,"+new Base64().encodeToString(imageFile.getBytes()));
         videoTotal.setMoney(new BigDecimal(videoTotal.getMoney()).compareTo(new BigDecimal("0")) == -1 ? "0" : videoTotal.getMoney());
         videoTotal.setUserPhone(Long.valueOf(userPhone));
         if (new BigDecimal(videoTotal.getMoney()).compareTo(new BigDecimal("0")) == 1) {
+//            添加商品
             if (Util.util.videoMapper.addMemberRank(videoTotal.getMoney(), videoTotal.getTitle(), videoTotalUUID) == 0) {
                 throw new Exception("提交失败!");
             }
@@ -134,6 +142,8 @@ public class Upload {
         Util.util.videoMapper.addVideoType(videoTotal.getType());
         var videoList = new ArrayList<Video>();
         for (int i = 0; i < split.length; i++) {
+//            TODo
+//            设置视频列表优先级(排序)  int s = (i+1)*10;
             videoList.add(new Video(videoTotalUUID, split[i] ,videoTotal.getTitle()));
         }
         if (zipFile!=null) {
@@ -141,9 +151,11 @@ public class Upload {
             zipFile.transferTo(file);
             videoTotal.setPath(file.getPath());
         }
+//        添加视频合集表  video_total
         if (Util.util.videoMapper.addVideoTotal(videoTotal) == 0) {
             throw new Exception("提交失败!");
         }
+//        添加视频  video
         responseJson.put("count", Util.util.videoMapper.addVideoList(videoList));
         return responseJson.toString();
     }
@@ -156,7 +168,7 @@ public class Upload {
          */
 //    @PostMapping("/submitUserVideo")
 //    @Transactional(rollbackFor = Exception.class)
-    public String submitUserVideo(MultipartFile[] files, MultipartFile imageFile,MultipartFile zipFile, @Validated VideoTotal videoTotal, HttpServletRequest request) throws Exception {
+   /* public String submitUserVideo(MultipartFile[] files, MultipartFile imageFile,MultipartFile zipFile, @Validated VideoTotal videoTotal, HttpServletRequest request) throws Exception {
         var userPhone = request.getHeader("userPhone");
         System.out.println(userPhone);
         if (!Util.isPhone(userPhone) || files.length == 0) {
@@ -195,7 +207,7 @@ public class Upload {
         responseJson.put("count", Util.util.videoMapper.addVideoList(videoList));
         return responseJson.toString();
     }
-
+*/
     public String getFileNameNoEx(String filename) {
         if ((filename != null) && (filename.length() > 0)) {
             int dot = filename.lastIndexOf('.');
