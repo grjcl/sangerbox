@@ -26,6 +26,4 @@ public interface CancerImageService {
      * @return
      */
     List<CancerImage> selectCancerAll();
-
-    List<String> selectCancerType();
 }
