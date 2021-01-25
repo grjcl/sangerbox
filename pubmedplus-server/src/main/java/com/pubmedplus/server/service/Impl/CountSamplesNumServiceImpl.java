@@ -1,6 +1,5 @@
 package com.pubmedplus.server.service.Impl;
 
-import com.pubmedplus.server.dao.sangerbox.ICancerImageMapper;
 import com.pubmedplus.server.dao.sangerbox.ICountSamplesNumMapper;
 import com.pubmedplus.server.pojo.CountSamplesNumModel;
 import com.pubmedplus.server.service.CountSamplesNumService;

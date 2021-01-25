@@ -1,6 +1,6 @@
 package com.pubmedplus.server.service.Impl;
 
-import com.pubmedplus.server.dao.sangerbox.ICancerImageMapper;
+import com.pubmedplus.server.dao.pubmed.ICancerImageMapper;
 import com.pubmedplus.server.pojo.CancerImage;
 import com.pubmedplus.server.service.CancerImageService;
 import com.pubmedplus.server.utils.BASE64;
@@ -9,7 +9,6 @@ import org.springframework.stereotype.Service;
 
 import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletResponse;
-import java.net.URLEncoder;
 import java.util.List;
 
 /**
@@ -22,12 +21,12 @@ public class CancerImageServiceImpl implements CancerImageService {
     @Autowired
     private ICancerImageMapper cancerImageMapper;
 
-    /*
-    查询出
-     */
+    @Override
+   public List<String> selectCancerType(){
+        return cancerImageMapper.selectCancerType();
+    }
 
-
-/*
+/**
    根据cancerId查询出64的图片
  */
     @Override

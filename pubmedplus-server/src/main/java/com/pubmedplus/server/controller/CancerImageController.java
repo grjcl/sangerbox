@@ -36,4 +36,14 @@ public class CancerImageController {
         responseJson.put("listCancer", cancerAll.toArray());
         return responseJson.toString();
     }
+
+    @GetMapping("getCancerType")
+    public String getCancerType(){
+        var responseJson = new JSONObject();
+        List<String> cancerAll = cancerImageService.selectCancerType();
+        responseJson.put("listCancer", cancerAll.toArray());
+        return responseJson.toString();
+    }
+
+
 }
